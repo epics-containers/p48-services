@@ -24,6 +24,11 @@ blueapi:
   extraEnvVars:
     - name: BEAMLINE
       value: p48
+    - name: RABBITMQ_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: rabbitmq-secrets
+          key: rabbitmq-password
   tracing:
     otlp:
       enabled: true
@@ -44,8 +49,8 @@ blueapi:
         broadcast_status_events: False
     stomp:
       auth:
-        username: guest
-        password: guest
+        username: p48
+        password: ${RABBITMQ_PASSWORD}
       host: p48-rabbitmq
     oidc:
       well_known_url: "https://authn.diamond.ac.uk/realms/master/.well-known/openid-configuration"
