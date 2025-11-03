@@ -1,17 +1,21 @@
+# yaml-language-server: $schema=../.helm-shared/values.schema.json
+
 # shared values for all services
 
 global:
-  ioc_group: p48
+  domain: p48
   location: bl48p
   enabled: true
 
-ioc-instance:
-  # useHostNetwork - use host network for IOC - required for Channel Access
-  # to work outside of the cluster
+# shared settings for all IOC types
+shared: &shared
+  # hostNetwork
+  # set to true for Channel Access to work outside of the cluster (or use a gateway)
   hostNetwork: true
 
-  # affinity and tolerations to get the right nodes on pollux
+  # running as ixxdetector account uid,gid gives access to /dls/ixx/data
   securityContext:
+    allowPrivilegeEscalation: false
     runAsUser: 37888
     runAsGroup: 37888
 
@@ -38,3 +42,11 @@ ioc-instance:
       operator: Equal
       value: training-rig
       effect: NoSchedule
+
+# shared settings for all ibek IOCs using the ioc-instance helm chart
+ioc-instance:
+  <<: *shared
+
+# shared setting for all legacy IOCs using the dev-c7 helm chart
+dev-c7:
+  <<: *shared
