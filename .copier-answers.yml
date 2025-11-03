@@ -1,11 +1,16 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
 _commit: 5.0.2
 _src_path: gh:epics-containers/services-template-helm
-athena_services: []
+athena_services:
+- rabbitmq
+- blueapi
+- nexus
+auth_enabled: false
 cluster_name: pollux
 cluster_namespace: p48-beamline
 description: p48 IOC Instances and Services
 domain: p48
 git_platform: github.com
+instrument: p48
 location: bl48p
 logging_url: https://graylog2.diamond.ac.uk/search?rangetype=relative&fields=message%2Csource&width=1489&highlightMessage=&relative=172800&q=pod_name%3A{service_name}*

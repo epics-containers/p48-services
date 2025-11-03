@@ -1,8 +1,7 @@
 apiVersion: v2
 name: p48-blueapi
-description: blueapi deployed for p48 with authentication and tracing
-
-version: 0.7.2
+description: blueapi deployed for p48
+version: 1.0.0
 # When we deploy with the edge-containers-cli we override this on the command line.
 # Direct deployment with Helm will use the default beta value.
 appVersion: 0.0.1b1
@@ -11,5 +10,5 @@ type: application
 
 dependencies:
   - name: blueapi
-    version: "0.7.2"
+    version: "1.6.4"
     repository: "oci://ghcr.io/diamondlightsource/charts"
