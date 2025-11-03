@@ -28,7 +28,7 @@ nexus-file-converter:
       profiles:
         active: rabbitmq
       rabbitmq:
-        host: p48-rabbitmq
+        host: tcp://p48-rabbitmq-daq.diamond.ac.uk
         username: guest
         password: guest
     files:
