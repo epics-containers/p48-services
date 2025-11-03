@@ -1,5 +1,7 @@
 blueapi:
   hostNetwork: true
+  securityContext:
+    runAsUser: 36097  # k8s-p48-beamline
   ingress:
     enabled: true
     hosts:
