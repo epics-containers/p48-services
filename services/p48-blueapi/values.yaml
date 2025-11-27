@@ -75,6 +75,8 @@ blueapi:
 
   initContainer:
     enabled: true
+    persistentVolume:
+      enabled: true
 
 
 oauth2:
