@@ -33,7 +33,6 @@ nexus-file-converter:
         password: guest
     files:
       output:
-        
         directory:
           staticDirectory: ""  # explicitly empty, get from StartDocument metadata
         
