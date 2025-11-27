@@ -1,5 +1,7 @@
 blueapi:
   hostNetwork: false
+  securityContext:
+    runAsUser: 1000
   ingress:
     enabled: false
     hosts:
