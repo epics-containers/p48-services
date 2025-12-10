@@ -15,7 +15,6 @@ shared: &shared
 
   # running as ixxdetector account uid,gid gives access to /dls/ixx/data
   securityContext:
-    allowPrivilegeEscalation: false
     runAsUser: 37888
     runAsGroup: 37888
 
