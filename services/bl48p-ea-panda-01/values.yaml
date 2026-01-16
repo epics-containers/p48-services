@@ -9,3 +9,7 @@ ioc-instance:
   # don't use livenessProbe, preStop which dont exist in panda image.
   livenessExecutable: ""
   preStopExecutable: ""
+
+  dataVolume:
+    pvc: false
+    hostPath: /exports/mybeamline/data/
