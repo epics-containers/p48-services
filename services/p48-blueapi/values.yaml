@@ -36,6 +36,15 @@ blueapi:
     - name: EPICS_CA_AUTO_ADDR_LIST
       value: "NO"
 
+  livenessProbe:
+    periodSeconds: 3600
+
+  readinnessProbe:
+    periodSeconds: 3600
+
+  startupProbe:
+    periodSeconds: 3600
+
   tracing:
     otlp:
       enabled: true
