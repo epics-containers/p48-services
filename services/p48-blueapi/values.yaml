@@ -1,6 +1,6 @@
 blueapi:
   livenessProbe:
-    failureThreshold: 360
+    periodSeconds: 3600
   debug:
     enabled: true
   hostNetwork: false
