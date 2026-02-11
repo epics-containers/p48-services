@@ -1,9 +1,4 @@
 blueapi:
-  livenessProbe:
-    periodSeconds: 3600
-  readinessProbe:
-    periodSeconds: 3600
-
   debug:
     enabled: true
   hostNetwork: false
