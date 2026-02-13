@@ -1,6 +1,6 @@
 blueapi:
   debug:
-    enabled: false
+    enabled: true
   hostNetwork: false
   ingress:
     enabled: false
