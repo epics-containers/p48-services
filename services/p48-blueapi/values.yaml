@@ -81,6 +81,7 @@ blueapi:
           remote_url: https://github.com/DiamondLightSource/htss-rig-bluesky.git
         - name: ophyd-async
           remote_url: https://github.com/bluesky/ophyd-async.git
+          branch: "0,15"
 
   initContainer:
     enabled: true
