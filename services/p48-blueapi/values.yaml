@@ -64,10 +64,10 @@ blueapi:
       graylog:
         enabled: true
     
-    oidc:
-      well_known_url: "https://authn.diamond.ac.uk/realms/master/.well-known/openid-configuration"
-      client_id: "blueapi-cli"
-      logout_redirect_endpoint: "oauth2/sign_out"
+    #oidc:
+    #  well_known_url: "https://authn.diamond.ac.uk/realms/master/.well-known/openid-configuration"
+    #  client_id: "blueapi-cli"
+    #  logout_redirect_endpoint: "oauth2/sign_out"
     
     
     numtracker:
