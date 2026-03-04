@@ -3,7 +3,7 @@ blueapi:
     enabled: true
   hostNetwork: false
   ingress:
-    enabled: false
+    enabled: true
     hosts:
       - host: p48-blueapi.diamond.ac.uk
         paths:
