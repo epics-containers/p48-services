@@ -47,7 +47,6 @@ nexus-file-converter:
       port: 8084
     management:
       tracing:
-        endpoint: "http://opentelemetry-collector.tracing:4318/v1/traces"
         sampling:
           probability: 1.0
         enabled: true
