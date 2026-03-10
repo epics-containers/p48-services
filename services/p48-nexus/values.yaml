@@ -22,6 +22,8 @@ nexus-file-converter:
       value: bl48p
       effect: NoSchedule
 
+  image:
+    tags: "4.1.7-a3"
   volumes:
   - name: nexus-data
     hostPath:
