@@ -15,7 +15,7 @@ nexus-file-converter:
     - name: OTEL_EXPORTER_OTLP_ENDPOINT
       value: "http://opentelemetry-collector.tracing:4318"
     - name: OTEL_LOG_LEVEL
-      value: debug  
+      value: trace  
 
   nodeSelector:
     kubernetes.io/hostname: bl48p-ea-serv-01.diamond.ac.uk
@@ -48,8 +48,8 @@ nexus-file-converter:
     management:
       tracing:
         sampling:
-          probability: 1.0
-        enabled: true
+          probability: 0.0
+        enabled: false
         
     spring:
       profiles:
