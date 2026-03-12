@@ -1,6 +1,6 @@
 nexus-file-converter:
   debug:
-    enabled: false
+    enabled: true
     suspend: false
   beamline: p48
   template:
