@@ -45,12 +45,13 @@ nexus-file-converter:
   application:
     server:
       port: 8084
-    management:
-      tracing:
-        sampling:
-          probability: 0.0
-        enabled: false
-        
+
+    otel:
+      service:
+        name: nexus-file-writing
+      exporter:
+        otlp:
+          endpoint: http://opentelemetry-collector.tracing:4318
     spring:
       profiles:
         active: rabbitmq
