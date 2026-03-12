@@ -157,6 +157,6 @@ oauth2:
       injectRequestHeaders:
         - name: Authorization
           values:
-            - claimSource:
+          - claimSource:
               claim: access_token
               prefix: "Bearer "
