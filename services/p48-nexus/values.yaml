@@ -16,6 +16,8 @@ nexus-file-converter:
       value: "http://opentelemetry-collector.tracing:4318"
     - name: OTEL_LOG_LEVEL
       value: trace  
+    - name: OTEL_PROPAGATORS
+      value: tracecontext,b3
 
   nodeSelector:
     kubernetes.io/hostname: bl48p-ea-serv-01.diamond.ac.uk
