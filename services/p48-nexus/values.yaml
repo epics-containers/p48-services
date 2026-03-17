@@ -17,7 +17,7 @@ nexus-file-converter:
     - name: OTEL_LOG_LEVEL
       value: trace  
     - name: OTEL_PROPAGATORS
-      value: tracecontext,b3
+      value: tracecontext
 
   nodeSelector:
     kubernetes.io/hostname: bl48p-ea-serv-01.diamond.ac.uk
