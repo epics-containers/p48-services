@@ -1,0 +1,9 @@
+dependencies:
+- name: blueapi
+  repository: file:///home/danielfernandes/Programming/blueapi/helm/blueapi
+  version: 0.1.0
+- name: oauth2-proxy
+  repository: https://oauth2-proxy.github.io/manifests
+  version: 8.2.1
+digest: sha256:9ba62042e56df245af7a59447f0d94e6e6e53eaa1cfb7910f93fab2349f62771
+generated: "2026-04-15T13:58:54.217907238+01:00"
