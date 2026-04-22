@@ -98,6 +98,7 @@ blueapi:
     enabled: true
     persistentVolume:
       enabled: true
+      size: "2Gi"
 
 
 oauth2:
