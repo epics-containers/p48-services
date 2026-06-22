@@ -34,6 +34,6 @@ rabbitmq:
       memory: 1024Mi
       ephemeral-storage: 50Mi
     limits:
-      cpu: 750m
+      cpu: 2000m
       memory: 1536Mi
       ephemeral-storage: 2Gi
