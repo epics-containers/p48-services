@@ -88,6 +88,7 @@ blueapi:
     enabled: true
     persistentVolume:
       enabled: true
+      existingClaimName: foobar
 
 
 oauth2:
