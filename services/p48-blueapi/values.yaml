@@ -22,6 +22,11 @@ blueapi:
       value: bl48p
       effect: NoSchedule
 
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+
   extraEnvVars:
     - name: BEAMLINE
       value: p48
