@@ -35,17 +35,13 @@ blueapi:
       value: "NO"
     - name: EPICS_CA_AUTO_ADDR_LIST
       value: "NO"
+    
     - name: TILED_WRITER_SECRET
       valueFrom:
         secretKeyRef:
           name: blueapi-secret
           key: tiled-writer-secret
-  tracing:
-    otlp:
-      enabled: true
-      server:
-        host: http://opentelemetry-collector.tracing
-
+    
   worker:
     env:
       metadata:
@@ -77,15 +73,17 @@ blueapi:
     
     numtracker:
       url: https://numtracker-staging.diamond.ac.uk/graphql
-
+    
+    
     tiled:
       enabled: true
-      url: "http://p48-tiled:8000/api/v1/"
+      url: "https://tiled.diamond.ac.uk/api/v1/"
       authentication:
         client_id: "p48TiledWriter"
         client_secret: ${TILED_WRITER_SECRET}
     
     scratch:
+      root: /workspaces
       repositories:
         - name: dodal
           remote_url: https://github.com/DiamondLightSource/dodal.git
@@ -158,6 +156,6 @@ oauth2:
       injectRequestHeaders:
         - name: Authorization
           values:
-          - claimSource:
-              claim: access_token
-              prefix: "Bearer "
+            - claimSource:
+                claim: access_token
+                prefix: "Bearer "
