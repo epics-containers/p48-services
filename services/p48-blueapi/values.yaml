@@ -1,4 +1,6 @@
 blueapi:
+  image:
+    repository: oci://ghcr.io/dan-fernandes/charts
   debug:
     enabled: true
   hostNetwork: false
