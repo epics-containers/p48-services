@@ -11,7 +11,7 @@ type: application
 dependencies:
   - name: blueapi
     version: "1.12.13"
-    repository: "oci://ghcr.io/dan-fernandes/charts"
+    repository: "oci://ghcr.io/dan-fernandes/blueapi"
 
   - name: oauth2-proxy
     alias: oauth2
