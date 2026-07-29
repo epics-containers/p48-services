@@ -1,6 +1,6 @@
 blueapi:
   image:
-    repository: oci://ghcr.io/dan-fernandes/blueapi:1.12.13
+    repository: ghcr.io/dan-fernandes/blueapi
     # tag: "1.12.13"
   debug:
     enabled: true
