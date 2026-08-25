@@ -18,15 +18,16 @@ nexus-file-converter:
       value: trace  
 
   nodeSelector:
-    kubernetes.io/hostname: bl48p-ea-serv-01.diamond.ac.uk
+    beamline: p48
+
   tolerations:
+    - key: beamline
+      operator: Equal
+      value: p48
+      effect: NoSchedule
     - key: nodetype
       operator: Equal
       value: training-rig
-      effect: NoSchedule
-    - key: beamline
-      operator: Equal
-      value: bl48p
       effect: NoSchedule
 
   image:
