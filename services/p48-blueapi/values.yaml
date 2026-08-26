@@ -92,6 +92,7 @@ blueapi:
           remote_url: https://github.com/DiamondLightSource/dodal.git
         - name: htss-rig-bluesky
           remote_url: https://github.com/DiamondLightSource/htss-rig-bluesky.git
+          targetRevision: update-copier-template
         # - name: ophyd-async
         #   remote_url: https://github.com/bluesky/ophyd-async.git
 
