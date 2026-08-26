@@ -24,6 +24,6 @@ dependencies:
     version: 10.1.4
 
   - name: postgres
-    version: 1.6.1
+    version: 1.6.8
     repository: https://groundhog2k.github.io/helm-charts/
 
