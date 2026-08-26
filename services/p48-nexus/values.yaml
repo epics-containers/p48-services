@@ -1,6 +1,6 @@
 nexus-file-converter:
   debug:
-    enabled: false
+    enabled: true
     suspend: false
   beamline: p48
   template:
@@ -9,19 +9,29 @@ nexus-file-converter:
       instrument/:
         NX_class@: NXinstrument
         name: p48
+  containerEnvVars:
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "http/protobuf"
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://opentelemetry-collector.tracing:4318/v1/traces"
+    - name: OTEL_LOG_LEVEL
+      value: trace  
 
   nodeSelector:
-    kubernetes.io/hostname: bl48p-ea-serv-01.diamond.ac.uk
+    beamline: p48
+
   tolerations:
+    - key: beamline
+      operator: Equal
+      value: p48
+      effect: NoSchedule
     - key: nodetype
       operator: Equal
       value: training-rig
       effect: NoSchedule
-    - key: beamline
-      operator: Equal
-      value: bl48p
-      effect: NoSchedule
 
+  image:
+    tags: "4.1.7-a3"
   volumes:
   - name: nexus-data
     hostPath:
@@ -36,6 +46,13 @@ nexus-file-converter:
   application:
     server:
       port: 8084
+
+    otel:
+      service:
+        name: nexus-file-writing
+      exporter:
+        otlp:
+          endpoint: http://opentelemetry-collector.tracing:4318
     spring:
       profiles:
         active: rabbitmq
