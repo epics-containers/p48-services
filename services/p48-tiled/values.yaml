@@ -11,6 +11,9 @@ tiled:
       secretKeyRef:
         name: postgres-secret
         key: ADMIN_PASS
+
+  - name: PYTHONPATH
+    value: /deploy/
   image:
     repository: ghcr.io/diamondlightsource/dls-tiled
     tag: 0.5.0
@@ -60,6 +63,8 @@ tiled:
           #
           # separately.
           init_if_not_exists: true
+    routers:
+      - tiled_routers.routers:router
   ingress:
     enabled: false
     className: "nginx"
@@ -79,6 +84,9 @@ tiled:
   - mountPath: /deploy/config
     name: config
     readOnly: true
+  - name: routers
+    mountPath: /deploy/tiled_routers
+    readOnly: true
   - mountPath: /exports/mybeamline
     mountPropagation: HostToContainer
     name: data
@@ -90,6 +98,9 @@ tiled:
       path: /exports/mybeamline
       type: DirectoryOrCreate
     name: data
+  - name: routers
+    configMap:
+      name: p48-tiled-routers
   # - name: storage
   #   persistentVolumeClaim:
   #     claimName: tiled-storage-pvc
@@ -121,9 +132,21 @@ oauth2:
     configFile: |-
       skip_provider_button = true
       skip_jwt_bearer_tokens = true
+      skip_auth_preflight = true
       cookie_refresh="1m"
       cookie_expire="30m"
       email_domains = [ "*" ]
+      skip_auth_routes=[
+      "GET=^/tiled-ui-settings",
+      "GET=^/healthz",
+      "GET=manifest\\.json$",
+      "^/api/v1/auth/provider/",
+      "POST=^/api/v1/auth/session/(refresh|revoke)$",
+      "GET=^/api/v1/?$",
+      "GET=^/api/v1/stream/",
+      "^/zarr/.*"
+      ]
+      api_routes=["^/api/"]
       whitelist_domains=["identity.diamond.ac.uk"]
   ingress:
     enabled: true
