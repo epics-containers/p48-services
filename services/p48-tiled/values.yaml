@@ -11,14 +11,15 @@ tiled:
       secretKeyRef:
         name: postgres-secret
         key: ADMIN_PASS
-  
+
   - name: PYTHONPATH
     value: /deploy/
   image:
-    tag: 0.2.7
+    repository: ghcr.io/diamondlightsource/dls-tiled
+    tag: 0.5.0
   config:
     database:
-      uri: sqlite:////storage/auth.db
+      uri: "postgresql+asyncpg://postgres:${POSTGRESQL_PASSWORD}@p48-tiled-postgres:5432/auth"
       init_if_not_exists: true
     authentication:
       secret_keys:
@@ -29,13 +30,16 @@ tiled:
         args:
           audience: account
           client_id: p48-tiled
-          device_flow_client_id: tiled-cli
+          device_flow_client_id: tiledCli
           well_known_uri: "https://identity.diamond.ac.uk/realms/dls/.well-known/openid-configuration"
           confirmation_message: "You have logged in with identity-test.diamond.ac.uk as {id}."
+          scopes_map:
+            read: ["read:metadata", "read:data"]
+            write: ["write:metadata", "write:data","create:node","register"]
     access_control:
-      access_policy: "access_policy.dls:DiamondOpenPolicyAgentAuthorizationPolicy"
+      access_policy: "dls_tiled.policy:DiamondOpenPolicyAgentAuthorizationPolicy"
       args:
-        authorization_provider: https://pxx-opa.diamond.ac.uk/v1/data/diamond/policy/
+        authorization_provider: http://p48-tiled-authz/v1/data/diamond/policy/
         token_audience: account
         empty_access_blob_public: true
     trees:
@@ -44,6 +48,8 @@ tiled:
         args:
           uri: "postgresql+asyncpg://postgres:${POSTGRESQL_PASSWORD}@p48-tiled-postgres:5432/tiled-db"
           writable_storage: "postgresql://postgres:${POSTGRESQL_PASSWORD}@p48-tiled-postgres:5432/data"
+          readable_storage:
+            - /exports/mybeamline
           # uri: "sqlite:////storage/catalog.db"
           # writable_storage: "sqlite:////storage/data.db"
           # readable_storage:
@@ -57,6 +63,8 @@ tiled:
           #
           # separately.
           init_if_not_exists: true
+    routers:
+      - tiled_routers.routers:router
   ingress:
     enabled: false
     className: "nginx"
@@ -65,6 +73,19 @@ tiled:
         paths:
           - path: /
             pathType: Prefix
+  nodeSelector:
+    beamline: p48
+
+  tolerations:
+    - key: beamline
+      operator: Equal
+      value: p48
+      effect: NoSchedule
+    - key: nodetype
+      operator: Equal
+      value: training-rig
+      effect: NoSchedule
+
   resources:
     limits:
       cpu: 1000m
@@ -76,33 +97,41 @@ tiled:
   - mountPath: /deploy/config
     name: config
     readOnly: true
-  # - mountPath: /exports/mybeamline
-  #   mountPropagation: HostToContainer
-  #   name: data
+  - name: routers
+    mountPath: /deploy/tiled_routers
+    readOnly: true
+  - mountPath: /exports/mybeamline
+    mountPropagation: HostToContainer
+    name: data
   # - name: storage
   #   mountPath: "/storage"
     # readOnly: false
-  - name: access-policy
-    mountPath: /deploy/access_policy
-    readOnly: true
   volumes:
-  # - hostPath:
-  #     path: /exports/mybeamline
-  #     type: DirectoryOrCreate
-  #   name: data
+  - hostPath:
+      path: /exports/mybeamline
+      type: DirectoryOrCreate
+    name: data
+  - name: routers
+    configMap:
+      name: p48-tiled-routers
   # - name: storage
   #   persistentVolumeClaim:
   #     claimName: tiled-storage-pvc
-  - name: access-policy
-    configMap:
-      name: tiled-access-policy
 
 glazed:
-  image:
-    # TODO: Update to latest glazed after
-    # https://github.com/DiamondLightSource/glazed/pull/98 merged and released
-    repository: ghcr.io/zohebshaikh/glazed
-    tag: "0.1.3"
+  nodeSelector:
+    beamline: p48
+
+  tolerations:
+    - key: beamline
+      operator: Equal
+      value: p48
+      effect: NoSchedule
+    - key: nodetype
+      operator: Equal
+      value: training-rig
+      effect: NoSchedule
+
   customConfig:
     enabled: true
     toml: |-
@@ -129,9 +158,21 @@ oauth2:
     configFile: |-
       skip_provider_button = true
       skip_jwt_bearer_tokens = true
+      skip_auth_preflight = true
       cookie_refresh="1m"
       cookie_expire="30m"
       email_domains = [ "*" ]
+      skip_auth_routes=[
+      "GET=^/tiled-ui-settings",
+      "GET=^/healthz",
+      "GET=manifest\\.json$",
+      "^/api/v1/auth/provider/",
+      "POST=^/api/v1/auth/session/(refresh|revoke)$",
+      "GET=^/api/v1/?$",
+      "GET=^/api/v1/stream/",
+      "^/zarr/.*"
+      ]
+      api_routes=["^/api/"]
       whitelist_domains=["identity.diamond.ac.uk"]
   ingress:
     enabled: true
@@ -141,6 +182,19 @@ oauth2:
       nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
     path: /
     pathType: Prefix
+  nodeSelector:
+    beamline: p48
+
+  tolerations:
+    - key: beamline
+      operator: Equal
+      value: p48
+      effect: NoSchedule
+    - key: nodetype
+      operator: Equal
+      value: training-rig
+      effect: NoSchedule
+
   alphaConfig:
     enabled: true
     configData:
