@@ -1,0 +1,107 @@
+# Plain OPA instead of the authz-opa chart, matching athena-app: the newest authz-opa
+# chart ships OPA 0.59, but the authz-policy bundle is built for rego v1 / OPA 1.x.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: p48-tiled-opa-config
+data:
+  config.yaml: |
+    services:
+      diamond-bundler:
+        url: https://authz.diamond.ac.uk
+        credentials:
+          bearer:
+            token: ${BUNDLER_BEARER_TOKEN}
+      ghcr:
+        url: https://ghcr.io
+        type: oci
+    bundles:
+      diamond-permissionables:
+        service: diamond-bundler
+        resource: bundle.tar.gz
+        polling:
+          min_delay_seconds: 10
+          max_delay_seconds: 60
+      application-policy:
+        service: ghcr
+        resource: ghcr.io/diamondlightsource/authz-policy:0.0.25
+        polling:
+          min_delay_seconds: 30
+          max_delay_seconds: 120
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: p48-tiled-authz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: p48-tiled-authz
+  template:
+    metadata:
+      labels:
+        app: p48-tiled-authz
+    spec:
+      containers:
+        - name: opa
+          image: docker.io/openpolicyagent/opa:1.21.2
+          args:
+            - run
+            - --server
+            # OPA 1.0 listens on localhost:8181 by default; tiled reaches it through the Service
+            - --addr
+            - 0.0.0.0:8181
+            - --diagnostic-addr
+            - 0.0.0.0:8282
+            - --config-file
+            - /etc/opa-config/config.yaml
+            - --log-level
+            - info
+          env:
+            - name: BUNDLER_BEARER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: tiled-secret
+                  key: authz-bearer-token
+            - name: ISSUER
+              value: https://identity.diamond.ac.uk/realms/dls
+          volumeMounts:
+            - name: opa-config
+              mountPath: /etc/opa-config
+          ports:
+            - name: query
+              containerPort: 8181
+            - name: diagnostic
+              containerPort: 8282
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: diagnostic
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: diagnostic
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 1000m
+              memory: 2Gi
+      volumes:
+        - name: opa-config
+          configMap:
+            name: p48-tiled-opa-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: p48-tiled-authz
+spec:
+  ports:
+    - name: query
+      port: 80
+      targetPort: query
+  selector:
+    app: p48-tiled-authz

@@ -11,11 +11,9 @@ tiled:
       secretKeyRef:
         name: postgres-secret
         key: ADMIN_PASS
-  
-  - name: PYTHONPATH
-    value: /deploy/
   image:
-    tag: 0.2.7
+    repository: ghcr.io/diamondlightsource/dls-tiled
+    tag: 0.5.0
   config:
     database:
       uri: sqlite:////storage/auth.db
@@ -33,9 +31,9 @@ tiled:
           well_known_uri: "https://identity.diamond.ac.uk/realms/dls/.well-known/openid-configuration"
           confirmation_message: "You have logged in with identity-test.diamond.ac.uk as {id}."
     access_control:
-      access_policy: "access_policy.dls:DiamondOpenPolicyAgentAuthorizationPolicy"
+      access_policy: "dls_tiled.policy:DiamondOpenPolicyAgentAuthorizationPolicy"
       args:
-        authorization_provider: https://pxx-opa.diamond.ac.uk/v1/data/diamond/policy/
+        authorization_provider: http://p48-tiled-authz/v1/data/diamond/policy/
         token_audience: account
         empty_access_blob_public: true
     trees:
@@ -44,6 +42,8 @@ tiled:
         args:
           uri: "postgresql+asyncpg://postgres:${POSTGRESQL_PASSWORD}@p48-tiled-postgres:5432/tiled-db"
           writable_storage: "postgresql://postgres:${POSTGRESQL_PASSWORD}@p48-tiled-postgres:5432/data"
+          readable_storage:
+            - /exports/mybeamline
           # uri: "sqlite:////storage/catalog.db"
           # writable_storage: "sqlite:////storage/data.db"
           # readable_storage:
@@ -76,26 +76,20 @@ tiled:
   - mountPath: /deploy/config
     name: config
     readOnly: true
-  # - mountPath: /exports/mybeamline
-  #   mountPropagation: HostToContainer
-  #   name: data
+  - mountPath: /exports/mybeamline
+    mountPropagation: HostToContainer
+    name: data
   # - name: storage
   #   mountPath: "/storage"
     # readOnly: false
-  - name: access-policy
-    mountPath: /deploy/access_policy
-    readOnly: true
   volumes:
-  # - hostPath:
-  #     path: /exports/mybeamline
-  #     type: DirectoryOrCreate
-  #   name: data
+  - hostPath:
+      path: /exports/mybeamline
+      type: DirectoryOrCreate
+    name: data
   # - name: storage
   #   persistentVolumeClaim:
   #     claimName: tiled-storage-pvc
-  - name: access-policy
-    configMap:
-      name: tiled-access-policy
 
 glazed:
   image:
