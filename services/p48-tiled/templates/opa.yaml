@@ -62,7 +62,7 @@ spec:
             - name: BUNDLER_BEARER_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: tiled-secret
+                  name: opa-secret
                   key: authz-bearer-token
             - name: ISSUER
               value: https://identity.diamond.ac.uk/realms/dls
