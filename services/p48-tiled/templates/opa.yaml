@@ -43,6 +43,18 @@ spec:
       labels:
         app: p48-tiled-authz
     spec:
+      nodeSelector:
+        beamline: p48
+
+      tolerations:
+        - key: beamline
+          operator: Equal
+          value: p48
+          effect: NoSchedule
+        - key: nodetype
+          operator: Equal
+          value: training-rig
+          effect: NoSchedule
       containers:
         - name: opa
           image: docker.io/openpolicyagent/opa:1.21.2
