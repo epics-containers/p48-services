@@ -1,0 +1,10 @@
+apiVersion: v2
+name: p48-ui
+description: p48 deployment on the pollux/p48-beamline
+version: 0.1.0
+appVersion: "0.1.0"
+
+dependencies:
+  - name: p48
+    repository: "oci://ghcr.io/diamondlightsource/atlas/charts"
+    version: 0.1.0
