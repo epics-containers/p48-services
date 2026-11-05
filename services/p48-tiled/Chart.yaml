@@ -15,13 +15,13 @@ dependencies:
     repository: "oci://ghcr.io/bluesky/charts"
 
   - name: glazed
-    version: "0.1.1"
+    version: "0.2.0"
     repository: "oci://ghcr.io/diamondlightsource/charts"
 
   - name: oauth2-proxy
     alias: oauth2
     repository: https://oauth2-proxy.github.io/manifests
-    version: 10.1.4
+    version: 10.7.1
 
   - name: postgres
     version: 1.6.1
