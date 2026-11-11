@@ -7,4 +7,4 @@ appVersion: "0.1.0"
 dependencies:
   - name: p48
     repository: "oci://ghcr.io/diamondlightsource/atlas/charts"
-    version: 0.1.0-alpha.8
+    version: 0.1.0-alpha.9
